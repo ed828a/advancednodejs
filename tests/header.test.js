@@ -24,7 +24,8 @@ test("the header has the correct text", async () => {
   // const existingPage = (await browser.pages())[0]
   // await existingPage.goto('localhost:3000')
 
-  const text = await page.$eval("a.brand-logo", (el) => el.innerHTML);
+  // const text = await page.$eval("a.brand-logo", (el) => el.innerHTML);
+  const text = await page.getContentsOf("a.brand-logo")
   expect(text).toEqual("Blogster");
 });
 
@@ -37,8 +38,9 @@ test("To click login, and start OAuth flow", async () => {
 // .only means that we run this test only in this test file
 // test.only("When signed in, shows logout button", async () => {
 test("When signed in, shows logout button", async () => {
-  await page.login();
+  await page.login('/');
 
-  const text = await page.$eval('a[href="/auth/logout"]', (el) => el.innerHTML);
+  // const text = await page.$eval('a[href="/auth/logout"]', (el) => el.innerHTML);
+  const text = await page.getContentsOf('a[href="/auth/logout"]')
   expect(text).toEqual("Logout");
 });
