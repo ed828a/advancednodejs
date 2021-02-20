@@ -1,4 +1,6 @@
 const puppeteer = require("puppeteer");
+const sessionFactory = require('./factories/sessionFactory')
+const userFactory = require('./factories/userFactory')
 
 let browser, page;
 beforeEach(async () => {
@@ -34,18 +36,12 @@ test("To click login, and start OAuth flow", async () => {
 // test.only("When signed in, shows logout button", async () => {
 test ("When signed in, shows logout button", async () => {
   // this id is from MongoDB, it's real data
-  const userId = "6029f187c07b08049067fa4d";
-  const Buffer = require("safe-buffer").Buffer;
-  const sessionObject = { passport: { user: userId } };
-  const sessionString = Buffer.from(JSON.stringify(sessionObject))
-                              .toString("base64");
-  const Keygrip = require('keygrip')
-  const keys = require('../config/keys')
-  const keygrip = new Keygrip([keys.cookieKey])
-  const sig = keygrip.sign('session=' + sessionString) // keep the same pattern as cookie-session library does.
+  // const userId = "6029f187c07b08049067fa4d";
+  const user = await userFactory()
+  const { session, sig } = sessionFactory(user)
   
-  await page.goto('localhost:3000')
-  await page.setCookie({ name: 'session', value: sessionString })
+  await page.goto('localhost:3000') // make sure the cookie is set for the right website.
+  await page.setCookie({ name: 'session', value: session })
   await page.setCookie({ name: 'session.sig', value: sig })
   // refresh the page, to cuase the page re-render, so that we can have the updated header
   await page.goto('localhost:3000')
@@ -54,7 +50,10 @@ test ("When signed in, shows logout button", async () => {
   // const text = await page.$eval('.right li:nth-child(2) a', el => el.innerHTML)
   // waitFor wait until the selector element is rendered.
   await page.waitFor('a[href="/auth/logout"]'); // in case the test program runs faster than rendering
+
+  
   const text = await page.$eval('a[href="/auth/logout"]', el => el.innerHTML)
   expect(text).toEqual('Logout')
 
 });
+    
