@@ -44,13 +44,28 @@ class CustomPage {
 
     return superPage;
   }
-  
+
   constructor(page) {
-    this.page = page
+    this.page = page;
   }
 
   login() {
-    this.page.goto('localhost:3000')
-    this.page.setCookie()
+    this.page.goto("localhost:3000");
+    this.page.setCookie();
   }
 }
+
+// temporary file
+async () => {
+  await fetch("/api/blogs", {
+    method: "POST",
+    credentials: "same-origin", // by default, Fetch does not include cookies on request
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      title: "My title",
+      content: "My Content",
+    }),
+  });
+};
