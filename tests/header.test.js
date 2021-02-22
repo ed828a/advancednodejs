@@ -12,7 +12,7 @@ beforeEach(async () => {
   // page = await browser.newPage();
 
   page = await Page.build(); // this line replaces above lines
-  await page.goto("http://localhost:3000"); // visit localhost:3000
+  await page.goto(page.localUrl); // visit localhost:3000
 });
 
 afterEach(async () => {

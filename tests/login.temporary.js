@@ -2,15 +2,17 @@ const Page = require("puppeteer/lib/Page");
 const sessionFactory = require("./factories/sessionFactory");
 const userFactory = require("./factories/userFactory");
 
+const localUrl = process.env.NODE_ENV === 'development' ? "localhost:3000" : "http://localhost:3000"
+
 Page.prototype.login = async function () {
   const user = await userFactory();
   const { session, sig } = sessionFactory(user);
 
-  await this.goto("http://localhost:3000"); // make sure the cookie is set for the right website.
+  await this.goto(localUrl); // make sure the cookie is set for the right website.
   await this.setCookie({ name: "session", value: session });
   await this.setCookie({ name: "session.sig", value: sig });
   // refresh the page, to cuase the page re-render, so that we can have the updated header
-  await this.goto("http://localhost:3000");
+  await this.goto(localUrl);
 
   // test logout button
   // const text = await page.$eval('.right li:nth-child(2) a', el => el.innerHTML)
@@ -50,7 +52,7 @@ class CustomPage {
   }
 
   login() {
-    this.page.goto("http://localhost:3000");
+    this.page.goto(localUrl);
     this.page.setCookie();
   }
 }

@@ -16,19 +16,22 @@ class CustomPage {
     });
   }
 
+  
+
   constructor(page) {
     this.page = page;
+    this.localUrl = process.env.NODE_ENV === 'development' ? "localhost:3000" : "http://localhost:3000"
   }
 
   async login(url) {
     const user = await userFactory();
     const { session, sig } = sessionFactory(user);
 
-    await this.page.goto("http://localhost:3000"); // make sure the cookie is set for the right website.
+    await this.page.goto(this.localUrl); // make sure the cookie is set for the right website.
     await this.page.setCookie({ name: "session", value: session });
     await this.page.setCookie({ name: "session.sig", value: sig });
     // refresh the page, to cuase the page re-render, so that we can have the updated header
-    await this.page.goto(`http://localhost:3000${url}`);
+    await this.page.goto(`${this.localUrl}${url}`);
 
     // test logout button
     // const text = await page.$eval('.right li:nth-child(2) a', el => el.innerHTML)
