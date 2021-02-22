@@ -1,21 +1,21 @@
---- 
-cache: 
-  directories: 
-    - node_modules
-    - client/node_modules
+language: node_js
+node_js:
+  - "8"
 dist: trusty
+services:
+  - mongodb
+  - redis-server
 env: 
   - NODE_ENV=ci
   - PORT=3000
+cache:
+  directories:
+    - node_modules
+    - client/node_modules
 install: 
-  - "npm install"
-  - "npm run build"
-language: node_js
-node_js: "-\"8\""
-script: 
-  - "nohup npm run start &"
-  - "sleep 3"
-  - "npm run test"
-services: 
-  - mongodb
-  - redis-server
+  - npm install
+  - npm run build
+script:
+  - nohup npm run start &
+  - sleep 3
+  - npm run test
