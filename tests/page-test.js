@@ -7,7 +7,7 @@ test("To launch the browser", async () => {
   });
 
   const existingPage = (await browser.pages())[0];
-  await existingPage.goto("localhost:3000");
+  await existingPage.goto("http://localhost:3000");
   
 });
 

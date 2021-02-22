@@ -6,11 +6,11 @@ Page.prototype.login = async function () {
   const user = await userFactory();
   const { session, sig } = sessionFactory(user);
 
-  await this.goto("localhost:3000"); // make sure the cookie is set for the right website.
+  await this.goto("http://localhost:3000"); // make sure the cookie is set for the right website.
   await this.setCookie({ name: "session", value: session });
   await this.setCookie({ name: "session.sig", value: sig });
   // refresh the page, to cuase the page re-render, so that we can have the updated header
-  await this.goto("localhost:3000");
+  await this.goto("http://localhost:3000");
 
   // test logout button
   // const text = await page.$eval('.right li:nth-child(2) a', el => el.innerHTML)
@@ -50,7 +50,7 @@ class CustomPage {
   }
 
   login() {
-    this.page.goto("localhost:3000");
+    this.page.goto("http://localhost:3000");
     this.page.setCookie();
   }
 }

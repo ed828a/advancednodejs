@@ -4,7 +4,7 @@ let page;
 
 beforeEach(async () => {
   page = await Page.build();
-  await page.goto("localhost:3000");
+  await page.goto("http://localhost:3000");
 });
 
 afterEach(async () => {
@@ -78,40 +78,16 @@ describe("When logged in", async () => {
  // we want to make sure that the page can't make a blog post request to the server
  describe("User is not logged in", async () => {
   test("User can not create blog posts", async () => {
-    // run AJAX functions using Page.evaluate()
-    const result = await page.evaluate(() => {
-      
-      return fetch("/api/blogs", {
-        method: "POST",
-        credentials: "same-origin", // by default, Fetch does not include cookies on request
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          title: "My title",
-          content: "My Content",
-        }),
-      }).then(res => res.json());
+    const result = await page.post("/api/blogs", {
+      title: "My title",
+      content: "My Content",
+    }) 
 
-    });
-
-    // console.log('result: ', result)
     expect(result).toEqual({ error: 'You must log in!' }) 
   });
 
   test("User can not view blogs", async () => {
-    // run AJAX functions using Page.evaluate()
-    const result = await page.evaluate(() => {
-      
-      return fetch("/api/blogs", {
-        method: "GET",
-        credentials: "same-origin", // by default, Fetch does not include cookies on request
-        headers: {
-          "Content-Type": "application/json",
-        }        
-      }).then(res => res.json());
-
-    });
+    const result = await page.get('/api/blogs');
 
     // console.log('result: ', result)
     expect(result).toEqual({ error: 'You must log in!' }) 
